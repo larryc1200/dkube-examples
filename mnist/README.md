@@ -27,50 +27,87 @@
 
 ## Create & Launch JupyterLab Notebook
 
- - Ensure that all of Repos are in the `Ready` state
+ - Ensure that all of Repos above are in the `Ready` state
  - From the `IDEs` menu, select `+ Add JupyterLab` with the following fields:
    - `Basic` tab
-     - **Name:** `<your IDE-name`
-     - **Code:** `<your-code-repo>`
+     - **Name:** `<your-IDE-name`
+     - **Code:** `<your-code-repo>`  **(Created druing the Code Repo step)**
      - **Framework:** `tensorflow`
      - **Framework Version:** `2.0.0`
      - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
-     > **Note** The default Tensorflow Image should fill in automatically, but ensure that it is correct <br><Br>
+     > **Note** The default Tensorflow Image should fill in automatically, but ensure that it is correct
    - `Repos` tab
-      - **Inputs** > **Datasets**: `<your-dataset-repo>
+      - **Inputs** > **Datasets**: `<your-dataset-repo>`  **(Created druing the Dataset Repo step)**
       - **Mount Path:** `/mnist`
- - Leave the other fields in their current selection `Submit` <br><br>
+ - Leave the other fields in their current selection and `Submit` <br><br>
  - Once the IDE is running and the JupyterLab icon on the right is active, select it to launch a JupyterLab window
    - Navigate to <code>workspace/**\<your-code-repo\>**/mnist</code>
    - Open `train.ipynb`
-- Run workspace/dkube-examples/mnist/train.ipynb
-- You can experient in the notebook and develop your code. Once you are ready for a formal run, export your code into python script(s)
+     - `Run All Cells` from the menu at the top
+     - Change the `EPOCHS` variable in the 2nd cell "5" and rerun all cells
+     - You can view the difference in output at the bottom of the script
+     > **Note** You would normally be developing your code in JupyterLab, and once you were satisfied you would create a Python file from the `ipynb` file.  In this example, a Python file is already ready for execution.
 
-## Run training job
- - Runs->+Training Run.
- - Code: dkube-examples
- - Framework: Tensorflow
- - Version: 2.0.0
- - Start-up script: python mnist/train.py
- - Repos->Inputs->Datasets: select mnist and enter mountpath as /mnist
- - Repos->Outputs->Model: select mnist and enter mountpath as /model
- - Submit
+## Run Training Job
 
-## Katib based Hyperparameter Tuning
-1. Create a Run same as explained above, except that now a tuning file also needs to be uploaded in the configuration tab.
-  - For hyperparameter tuning upload the https://github.com/oneconvergence/dkube-examples/blob/tensorflow/mnist/tuning.yaml under upload tuning definition. 
-  - Submit the run. 
+- From the `Runs` menu, select `+ Run` > `Training` with the following fields:
+   - `Basic` tab
+     - **Name:** `<your-run-name`
+     - **Code:** `<your-code-repo>`  **(Created druing the Code Repo step)**
+     - **Framework:** `tensorflow`
+     - **Framework Version:** `2.0.0`
+     - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
+     > **Note** The default Tensorflow Image should fill in automatically, but ensure that it is correct
+     - **Start-up Command:** `python mnist/train.py`
+   - `Repos` tab
+      - **Inputs** > **Datasets**: `<your-dataset-repo>`  **(Created druing the Dataset Repo step)**
+        - **Mount Path:** `/mnist` <br><br>
+      - **Outputs** > **Models**: `<your-model-repo>`  **(Created druing the Model Repo step)**
+        - **Mount Path:** `/model`
+      > **Note** Ensure that you add the Model into the `Outputs` section, and not the `Inputs` section
+   - Leave the other fields in their current selection and `Submit`
+   - Your Run will show up from the `Runs` menu screen <br><br>
+   - Clone the Run by selecting the checkbox and choosing `Clone` from the top buttons
+     - Leave the `Basic` and `Repos` tabs the same
+     - On the `Configuration` tab
+       - Select the `+` button next to `Environment Variables`
+       - **Key:** `EPOCHS`   ****Must be in upper case)**
+       - **Value:** `5`
+     - `Submit`
 
-## Tuning.yaml file Details:
-1. **objective**: The metric that you want to optimize. 
-2. **goal** parameter is mandatory in tuning.yaml file.
-3. **objectiveMetricName:** Katib uses the objectiveMetricName and additionalMetricNames to monitor how the hyperparameters work with the model. Katib records the value of the best objectiveMetricName metric.
-4. **parameters** : The range of the hyperparameters or other parameters that you want to tune for your machine learning (ML) model.
-5. **parallelTrialCount**: The maximum number of hyperparameter sets that Katib should train in parallel. The default value is 3.
-6. **maxTrialCount**: The maximum number of trials to run.
-7. **maxFailedTrialCount**: The maximum number of failed trials before Katib should stop the experiment.
-8. **algorithm**: Search algorithm to find the best hyper parameters. Value must be one of following:
-  
+## Compare Runs
+
+ - Wait for both Runs to `complete`
+ - From the `Runs` menu, select both Run checkboxes, then select `Compare` button
+ - Scroll down and choose **Y-Axis:** `train_accuracy`
+
+## Run Katib-Based Hyperparameter Tuning
+ 
+ - Go to https://github.com/larryc1200/dkube-examples/tree/tensorflow/mnist/tuning.yaml
+ - Select `Raw`
+ - Right-click & `Save as...` "tuning.yaml"
+
+ - From the `Runs` menu, select the first Run checkbox, then select `Clone`
+   - Leave the `Basic` and `Repos` tabs the same
+   - On the `Configuration` tab
+     - Select `Upload Tuning Definition`
+     - Choose the `tuning.yaml` file that you saved
+   - `Submit` <br><br>
+ - Wait for Run to complete
+ - View the results by selecting the Katib icon on the right of the Run line
+
+
+
+
+### Tuning.yaml file Details:
+ - **objective**: The metric that you want to optimize. 
+ - **goal** parameter is mandatory in tuning.yaml file.
+ -**objectiveMetricName:** Katib uses the objectiveMetricName and additionalMetricNames to monitor how the hyperparameters work with the model. Katib records the value of the best objectiveMetricName metric.
+ - **parameters** : The range of the hyperparameters or other parameters that you want to tune for your machine learning (ML) model.
+ - **parallelTrialCount**: The maximum number of hyperparameter sets that Katib should train in parallel. The default value is 3.
+ - **maxTrialCount**: The maximum number of trials to run.
+ - **maxFailedTrialCount**: The maximum number of failed trials before Katib should stop the experiment.
+ - **algorithm**: Search algorithm to find the best hyper parameters. Value must be one of following:
    - random
    - bayesianoptimization
    - hyperband
