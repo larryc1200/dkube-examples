@@ -1,6 +1,6 @@
 # Clinical Regression Example
  
- This example takes clinical data, RNA data, and images as inputs and uses regression to train a model that will predict how long the person is expected take to recover.  The training flow is:
+ This example takes clinical data, RNA data, and images as inputs and uses regression to train a model that will predict how long the person is expected to take to recover.  The training flow is:
 
  - Preprocess the clinical data and images
  - Split the training data into training, validation, and test datasets
@@ -8,13 +8,9 @@
  - Deploy the model
  - Test the model with a WebApp
 
- This example provides an fully automated way to train and deploy the model, and a manual approach that highlights the DKube UI.
+ This example provides a fully automated way to train and deploy the model, and a manual approach that highlights the DKube UI.
 
-## Automated Setup and Execution using Kubeflow Pipelines
-
- The clinical regression can be run in an automated manner through a Kubeflow Pipeline. This section explains how to execute this.
-
-### Create Code Repo
+## Create Code Repo
 
  The Code Repo contains the program code and other associated files for developing and running your model training.
 
@@ -25,6 +21,10 @@
    - **URL:** `https://github.com/oneconvergence/dkube-examples.git`
    - **Branch:** `tensorflow`
    - Leave the other fields in their current selection and `Submit`
+
+## 1. Automated Setup and Execution using Kubeflow Pipelines
+
+ The clinical regression can be run in an automated manner through a Kubeflow Pipeline. This section explains how to execute this.
 
 ### Create JupyterLab IDE
 
@@ -37,6 +37,7 @@
    - **Framework:** `Tensorflow`
    - **Framework Version:** `2.0.0`
    - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
+   > **Note** The image should default to the correct selection, but you should check to ensure that it is the right one
    - Leave the other fields in their current selection and `Submit`
 
 ### Create & Run Pipeline
@@ -46,7 +47,7 @@
  - Navigate to `IDEs` menu on the left
  - When the JupyterLab instance is running, select the icon on the right to open a new JL tab
  - Navigate to <code>workspace/**\<your-code-repo\>**/clinical_reg</code>
- - Open `pipeline.ipynm`
+ - Open `pipeline.ipynb`
  - Select `Run` menu at the top and Select `Run All Cells` <br><br>
  - This will create the Kubeflow Pipeline to:
    - Create the datasets
@@ -66,8 +67,6 @@
 ### View Resources Created by Pipeline
 
  After the pipeline has completed its execution, you can view the Runs, Datasets, and Models created.
-
- 
 
 <!---
 ### Upload Pipeline to DKube
@@ -141,7 +140,7 @@
 8. Click ‘Upload Image’ to load image from [1], ‘Upload File’ to load csv from [1]
 9.  Click ‘Predict’ to run Inference.
 
-## Regression Notebook Workflow(Repos will be created by the pipeline above).
+## 2. Regression Notebook Workflow(Repos will be created by the pipeline above).
 
 1. Go to IDE section
 2. Create Notebook 

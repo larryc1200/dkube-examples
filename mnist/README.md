@@ -1,26 +1,48 @@
 # MNIST DIGITS CLASSIFICATION EXAMPLE 
 
-## Create code repo
-- Name: dkube-examples
-- Project source: Git
-- Git URL: https://github.com/oneconvergence/dkube-examples.git
-- Branch: tensorflow
+ This example uses the `mnist` model to identify a digit from an image.  It steps through a simple DKube workflow.
 
-## Create dataset repo
-- Name: mnist
-- Dataset source: Other
-- URL: https://s3.amazonaws.com/img-datasets/mnist.pkl.gz
+## Create Code Repo
 
+ - From the `Code` menu on the left, select `+ Add Code` with the following fields:
+   - **Name:** `<your-code-repo>`
+   - **Code Source:** `Git`
+   - **URL:**: `https://github.com/oneconvergence/dkube-examples.git`
+   - **Branch:** `tensorflow`
+ - Leave the other fields in their current selection and `Add Code`
 
-## Create a model
-- Name: mnist
-- Keep default for others
+## Create Dataset Repo
 
+ - From the `Datasets` menu, select `+ Add Dataset` with the following fields:
+   - **Name:** `<your dataset-repo`
+   - **Dataset source:** `Other`
+   - **URL:** `https://s3.amazonaws.com/img-datasets/mnist.pkl.gz`
+ - Leave the other fields in their current selection and `Add Dataset`  
 
-## Launch Notebook
-- Create Jupyterlab IDE with tensorflow framework.
-- Select the Code dkube-examples.
-- Repos->Inputs->Datasets: select mnist and enter mountpath as /mnist.
+## Create Model Repo
+
+ - From the `Models` menu, select `+ Add Model` with the following fields:
+   - **Name:** `<your model-repo`
+ - Leave the other fields in their current selection and `Add Dataset`  
+
+## Create & Launch JupyterLab Notebook
+
+ - Ensure that all of Repos are in the `Ready` state
+ - From the `IDEs` menu, select `+ Add JupyterLab` with the following fields:
+   - `Basic` tab
+     - **Name:** `<your IDE-name`
+     - **Code:** `<your-code-repo>`
+     - **Framework:** `tensorflow`
+     - **Framework Version:** `2.0.0`
+     - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
+     > **Note** The default Tensorflow Image should fill in automatically, but ensure that it is correct <br><Br>
+   - `Repos` tab
+      - **Inputs** > **Datasets**: `<your-dataset-repo>
+      - **Mount Path:** `/mnist`
+ - Leave the other fields in their current selection `Submit` <br><br>
+ - Once the IDE is running and the JupyterLab icon on the right is active, select it to launch a JupyterLab window
+   - Navigate to <code>workspace/**\<your-code-repo\>**/mnist</code>
+   - Open `train.ipynb`
 - Run workspace/dkube-examples/mnist/train.ipynb
 - You can experient in the notebook and develop your code. Once you are ready for a formal run, export your code into python script(s)
 
