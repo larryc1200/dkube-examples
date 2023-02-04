@@ -2,10 +2,12 @@
 
  This example uses the `mnist` model to identify a digit from an image.  It steps through a simple DKube workflow.
 
+ > **Note** This example runs on DKube V3.x and above
+
 ## Create Code Repo
 
  - From the `Code` menu on the left, select `+ Add Code` with the following fields:
-   - **Name:** `<your-code-repo>`
+   - **Name:** `<your-code-repo>`  **(Your choice)**
    - **Code Source:** `Git`
    - **URL:**: `https://github.com/oneconvergence/dkube-examples.git`
    - **Branch:** `tensorflow`
@@ -14,7 +16,7 @@
 ## Create Dataset Repo
 
  - From the `Datasets` menu, select `+ Add Dataset` with the following fields:
-   - **Name:** `<your dataset-repo`
+   - **Name:** `<your dataset-repo`  **(Your choice)**
    - **Dataset source:** `Other`
    - **URL:** `https://s3.amazonaws.com/img-datasets/mnist.pkl.gz`
  - Leave the other fields in their current selection and `Add Dataset`  
@@ -22,23 +24,23 @@
 ## Create Model Repo
 
  - From the `Models` menu, select `+ Add Model` with the following fields:
-   - **Name:** `<your model-repo`
- - Leave the other fields in their current selection and `Add Dataset`  
+   - **Name:** `<your model-repo`  **(Your choice)**
+ - Leave the other fields in their current selection and `Add Model`  
 
 ## Create & Launch JupyterLab Notebook
 
  - Ensure that all of Repos above are in the `Ready` state
  - From the `IDEs` menu, select `+ Add JupyterLab` with the following fields:
    - `Basic` tab
-     - **Name:** `<your-IDE-name`
-     - **Code:** `<your-code-repo>`  **(Created druing the Code Repo step)**
+     - **Name:** `<your-IDE-name`  **(Your choice)**
+     - **Code:** `<your-code-repo>`  **(Created during the Code Repo step)**
      - **Framework:** `tensorflow`
      - **Framework Version:** `2.0.0`
      - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
-     > **Note** The default Tensorflow Image should fill in automatically, but ensure that it is correct
+     > **Note** The default Tensorflow Image should fill in automatically, but ensure that it is correct <br><br>
    - `Repos` tab
-      - **Inputs** > **Datasets**: `<your-dataset-repo>`  **(Created druing the Dataset Repo step)**
-      - **Mount Path:** `/mnist`
+      - **Inputs** > **Datasets**: `<your-dataset-repo>`  **(Created during the Dataset Repo step)**
+        - **Mount Path:** `/mnist`
  - Leave the other fields in their current selection and `Submit` <br><br>
  - Once the IDE is running and the JupyterLab icon on the right is active, select it to launch a JupyterLab window
    - Navigate to <code>workspace/**\<your-code-repo\>**/mnist</code>
@@ -52,17 +54,17 @@
 
 - From the `Runs` menu, select `+ Run` > `Training` with the following fields:
    - `Basic` tab
-     - **Name:** `<your-run-name`
-     - **Code:** `<your-code-repo>`  **(Created druing the Code Repo step)**
+     - **Name:** `<your-run-name`  **(Your choice)**
+     - **Code:** `<your-code-repo>`  **(Created during the Code Repo step)**
      - **Framework:** `tensorflow`
      - **Framework Version:** `2.0.0`
      - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
-     > **Note** The default Tensorflow Image should fill in automatically, but ensure that it is correct
+     > **Note** The default Tensorflow Image should fill in automatically, but ensure that it is correct <br><br>
      - **Start-up Command:** `python mnist/train.py`
    - `Repos` tab
-      - **Inputs** > **Datasets**: `<your-dataset-repo>`  **(Created druing the Dataset Repo step)**
+      - **Inputs** > **Datasets**: `<your-dataset-repo>`  **(Created during the Dataset Repo step)**
         - **Mount Path:** `/mnist` <br><br>
-      - **Outputs** > **Models**: `<your-model-repo>`  **(Created druing the Model Repo step)**
+      - **Outputs** > **Models**: `<your-model-repo>`  **(Created during the Model Repo step)**
         - **Mount Path:** `/model`
       > **Note** Ensure that you add the Model into the `Outputs` section, and not the `Inputs` section
    - Leave the other fields in their current selection and `Submit`
@@ -71,7 +73,7 @@
      - Leave the `Basic` and `Repos` tabs the same
      - On the `Configuration` tab
        - Select the `+` button next to `Environment Variables`
-       - **Key:** `EPOCHS`   ****Must be in upper case)**
+       - **Key:** `EPOCHS`   **(Must be in upper case)**
        - **Value:** `5`
      - `Submit`
 
@@ -85,8 +87,7 @@
  
  - Go to https://github.com/larryc1200/dkube-examples/tree/tensorflow/mnist/tuning.yaml
  - Select `Raw`
- - Right-click & `Save as...` "tuning.yaml"
-
+ - Right-click & `Save as...` "tuning.yaml" <br><br>
  - From the `Runs` menu, select the first Run checkbox, then select `Clone`
    - Leave the `Basic` and `Repos` tabs the same
    - On the `Configuration` tab
@@ -96,17 +97,14 @@
  - Wait for Run to complete
  - View the results by selecting the Katib icon on the right of the Run line
 
-
-
-
-### Tuning.yaml file Details:
- - **objective**: The metric that you want to optimize. 
- - **goal** parameter is mandatory in tuning.yaml file.
+### Tuning.yaml File Details
+ - **objective**: The metric that you want to optimize
+ - **goal** parameter is mandatory in tuning.yaml file
  -**objectiveMetricName:** Katib uses the objectiveMetricName and additionalMetricNames to monitor how the hyperparameters work with the model. Katib records the value of the best objectiveMetricName metric.
- - **parameters** : The range of the hyperparameters or other parameters that you want to tune for your machine learning (ML) model.
+ - **parameters** : The range of the hyperparameters or other parameters that you want to tune for your machine learning (ML) model
  - **parallelTrialCount**: The maximum number of hyperparameter sets that Katib should train in parallel. The default value is 3.
- - **maxTrialCount**: The maximum number of trials to run.
- - **maxFailedTrialCount**: The maximum number of failed trials before Katib should stop the experiment.
+ - **maxTrialCount**: The maximum number of trials to run
+ - **maxFailedTrialCount**: The maximum number of failed trials before Katib should stop the experiment
  - **algorithm**: Search algorithm to find the best hyper parameters. Value must be one of following:
    - random
    - bayesianoptimization
@@ -114,42 +112,25 @@
    - cmaes
    - enas
 
-## Deploy Model (DKube version 2.1.x.x)
-- Repos->Models->mnist: select a model version
-- Deploy
-- Name: mnist
-- Type: Test
-- Transformer: True
-- Transformer script: mnist/transformer.py
-- Submit
+## Deploy Model
 
-## Publish and Deploy Model (Dkube version 2.2.x.x)
-- Repos->Models->mnist: select a model version
-- Click on Publish model icon under ACTIONS column.
-- Name: mnist
-- Transformer: True
-- Transformer script: mnist/transformer.py
-- Submit
-### Deploy model
-- Click on Model catalog and select the published model.
-- Click on the deploy model icon under ACTIONS column.
-- Enter the deploy model name and select CPU and click Submit.
-- Check in Model Serving and wait for the deployed model to change to running state.
+- From `Models` menu, select `<your-model-repo>`  **(Created during Model Repo step)**
+- Choose the highest version of the Model
+- Select the `Lineage` tab
+  - This provides information on the inputs and outputs of the Model <br><br>
+- Select the `Metrics` tab
+  - This provides the metrics associated with the Model <br><br>
+- Go back to `Models` top menu, and reselect the Model
+- Select the `Deploy` icon on the right of the newest Model
+  - **Name:** `<your-deploy-name>`  **(Your choice)**
+  - **Deployment:** `Production`
+  - **Deploy Using:** `CPU`
+  - **Transformer:** `Check Box`
+    - **Transformer Script:** `mnist/transformer.py`
+  - Leave the other fields in their current selection an `Submit` <br><br>
+  - The deployed Model will appear in the `Deployments` menu screen
 
-## Publish and Deploy Model (Dkube version 3.0.x.x)
-- Models->mnist: select a model version
-- Click on Publish model icon under ACTIONS column
-- Transformer: True
-- Transformer script: mnist/transformer.py
-- Submit
-### Deploy model
-- Click on Models in the navigation pane
-- Click on the drop down next to 'Owned by me' and select 'Published'
-- Click on the published model 'mnist'
-- Select the published version and click on the deploy model icon under ACTIONS column
-- Enter the deploy model name, select Deployment / Test and select Deploy using / CPU. Click Submit
-- Check in Deployments and wait for the deployed model to change to running state
-
+<!--->
 ## Test inference
 - Go to
   - Deployments in 2.1.x.x version
@@ -165,3 +146,4 @@
 
 ## Automate using pipelines
 Run this [pipeline](https://github.com/oneconvergence/dkube-examples/blob/tensorflow/mnist/pipeline.ipynb) to automate training and serving using kubeflow pipelines.
+-->
