@@ -85,7 +85,7 @@
 
 ## Run Katib-Based Hyperparameter Tuning
  
- - Go to https://github.com/larryc1200/dkube-examples/tree/tensorflow/mnist/tuning.yaml
+ - Go to https://github.com/oneconvergence/dkube-examples/tree/tensorflow/mnist/tuning.yaml
  - Select `Raw`
  - Right-click & `Save as...` "tuning.yaml" <br><br>
  - From the `Runs` menu, select the first Run checkbox, then select `Clone`
@@ -100,7 +100,7 @@
 ### Tuning.yaml File Details
  - **objective**: The metric that you want to optimize
  - **goal** parameter is mandatory in tuning.yaml file
- -**objectiveMetricName:** Katib uses the objectiveMetricName and additionalMetricNames to monitor how the hyperparameters work with the model. Katib records the value of the best objectiveMetricName metric.
+ - **objectiveMetricName:** Katib uses the objectiveMetricName and additionalMetricNames to monitor how the hyperparameters work with the model. Katib records the value of the best objectiveMetricName metric.
  - **parameters** : The range of the hyperparameters or other parameters that you want to tune for your machine learning (ML) model
  - **parallelTrialCount**: The maximum number of hyperparameter sets that Katib should train in parallel. The default value is 3.
  - **maxTrialCount**: The maximum number of trials to run
