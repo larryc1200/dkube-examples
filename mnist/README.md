@@ -4,7 +4,11 @@
 
  > **Note** This example runs on DKube V3.x and above
 
-## Create Code Repo
+## 1. Setup Resources
+
+ Before using DKube to experiment, train, and deploy, the resources must be set up.
+
+### Create Code Repo
 
  - From the `Code` menu on the left, select `+ Add Code` with the following fields:
    - **Name:** `<your-code-repo>`  **(Your choice)**
@@ -13,7 +17,7 @@
    - **Branch:** `tensorflow`
  - Leave the other fields in their current selection and `Add Code`
 
-## Create Dataset Repo
+### Create Dataset Repo
 
  - From the `Datasets` menu, select `+ Add Dataset` with the following fields:
    - **Name:** `<your dataset-repo`  **(Your choice)**
@@ -21,13 +25,15 @@
    - **URL:** `https://s3.amazonaws.com/img-datasets/mnist.pkl.gz`
  - Leave the other fields in their current selection and `Add Dataset`  
 
-## Create Model Repo
+### Create Model Repo
 
  - From the `Models` menu, select `+ Add Model` with the following fields:
    - **Name:** `<your model-repo`  **(Your choice)**
  - Leave the other fields in their current selection and `Add Model`  
 
-## Create & Launch JupyterLab Notebook
+## 2. Create & Launch JupyterLab Notebook
+
+ JupyterLab can be used to experiment with your code.
 
  - Ensure that all of Repos above are in the `Ready` state
  - From the `IDEs` menu, select `+ Add JupyterLab` with the following fields:
@@ -50,7 +56,11 @@
      - You can view the difference in output at the bottom of the script
      > **Note** You would normally be developing your code in JupyterLab, and once you were satisfied you would create a Python file from the `ipynb` file.  In this example, a Python file is already ready for execution.
 
-## Run Training Job
+## 3. Work with Traiing Runs
+
+ Batch training runs can be used to create trained models.
+
+### Run Training Job
 
 - From the `Runs` menu, select `+ Run` > `Training` with the following fields:
    - `Basic` tab
@@ -77,13 +87,13 @@
        - **Value:** `5`
      - `Submit`
 
-## Compare Runs
+### Compare Runs
 
  - Wait for both Runs to `complete`
  - From the `Runs` menu, select both Run checkboxes, then select `Compare` button
  - Scroll down and choose **Y-Axis:** `train_accuracy`
 
-## Run Katib-Based Hyperparameter Tuning
+### Run Katib-Based Hyperparameter Tuning
  
  - Go to https://github.com/oneconvergence/dkube-examples/tree/tensorflow/mnist/tuning.yaml
  - Select `Raw`
@@ -97,7 +107,8 @@
  - Wait for Run to complete
  - View the results by selecting the Katib icon on the right of the Run line
 
-### Tuning.yaml File Details
+#### Tuning.yaml File Details
+
  - **objective**: The metric that you want to optimize
  - **goal** parameter is mandatory in tuning.yaml file
  - **objectiveMetricName:** Katib uses the objectiveMetricName and additionalMetricNames to monitor how the hyperparameters work with the model. Katib records the value of the best objectiveMetricName metric.
@@ -112,7 +123,9 @@
    - cmaes
    - enas
 
-## Deploy Model
+## 4. Deploy Model
+
+ After the best model is identified, it can be deployed for inference serving.
 
 - From `Models` menu, select `<your-model-repo>`  **(Created during Model Repo step)**
 - Choose the highest version of the Model
@@ -129,6 +142,20 @@
     - **Transformer Script:** `mnist/transformer.py`
   - Leave the other fields in their current selection an `Submit` <br><br>
   - The deployed Model will appear in the `Deployments` menu screen
+
+## 5. Train &  Deploy with Kubeflow Pipelines
+
+ The training and deployment steps can be automated using Kubeflow Pipelines.
+
+ - Open the JupyterLab window
+ - Navigate to <code>workspace/**\<your-code-repo\>**/mnist</code>
+ - Open `pipeline.ipynb`
+   - In the 2nd cell, labeled `User Variables`, modify the repo names with your chosen names
+   - `Run All Cells` from the menu at the top <br><br>
+ - From the `Pipelines` menu on the left
+   - Select `Runs` tab
+   - Your new pipeline will be executing
+   - Select the pipeline name to see its progress
 
 <!--->
 ## Test inference
