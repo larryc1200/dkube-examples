@@ -161,9 +161,10 @@
 
 ## 6. Test inference
 
-- Create a browser tab and go to https://<dkube_url>/inference
-- Paste the Endpoint URL from `Deployments`
-- Copy Auth token from `Developer settings` in DKube page and paste in
-- Choose `mnist` for model type
-- Upload `3.png` from repo
-- Click `Predict`
+ - Create a browser tab and go to https://<dkube_url>/inference
+ - Paste the Endpoint URL from `Deployments`
+ - Copy Auth token from `Developer settings` in DKube page and paste in
+ - Choose `mnist` for model type
+ - Download `3.png` from repo
+ - Click `Predict`
+ > **Note** The prediction may time out waiting for the pod to start - select `wait` if prompted
