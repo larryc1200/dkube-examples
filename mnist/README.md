@@ -11,7 +11,7 @@
 ### Create Code Repo
 
  - From the `Code` menu on the left, select `+ Add Code` with the following fields:
-   - **Name:** `<your-code-repo>`  **(Your choice)**
+   - **Name:** `mnist`  **(Or choose `<your-code-repo>`)**
    - **Code Source:** `Git`
    - **URL:**: `https://github.com/oneconvergence/dkube-examples.git`
    - **Branch:** `tensorflow`
@@ -20,7 +20,7 @@
 ### Create Dataset Repo
 
  - From the `Datasets` menu, select `+ Add Dataset` with the following fields:
-   - **Name:** `<your dataset-repo`  **(Your choice)**
+   - **Name:** `mnist`  **(Or choose `<your dataset-repo`)**
    - **Dataset source:** `Other`
    - **URL:** `https://s3.amazonaws.com/img-datasets/mnist.pkl.gz`
  - Leave the other fields in their current selection and `Add Dataset`  
@@ -28,7 +28,7 @@
 ### Create Model Repo
 
  - From the `Models` menu, select `+ Add Model` with the following fields:
-   - **Name:** `<your model-repo`  **(Your choice)**
+   - **Name:** `mnist`  **(Or choose `<your model-repo`)**
  - Leave the other fields in their current selection and `Add Model`  
 
 ## 2. Create & Launch JupyterLab Notebook
@@ -143,13 +143,15 @@
   - Leave the other fields in their current selection an `Submit` <br><br>
   - The deployed Model will appear in the `Deployments` menu screen
 
-## 5. Train &  Deploy with Kubeflow Pipelines
+## 5. Train & Deploy with Kubeflow Pipelines
 
  The training and deployment steps can be automated using Kubeflow Pipelines.
 
  - Open the JupyterLab window
  - Navigate to <code>workspace/**\<your-code-repo\>**/mnist</code>
- - Open `pipeline.ipynb`
+ - Open `pipeline.ipynb` >br><br>
+ - If you chose the default value (`mnist`) then `Run all Cells`<br><br>
+ - If you chose different repo names
    - In the 2nd cell, labeled `User Variables`, modify the repo names with your chosen names
    - `Run All Cells` from the menu at the top <br><br>
  - From the `Pipelines` menu on the left
@@ -157,20 +159,11 @@
    - Your new pipeline will be executing
    - Select the pipeline name to see its progress
 
-<!--->
-## Test inference
-- Go to
-  - Deployments in 2.1.x.x version
-  - Model Serving in 2.2.x.x version
-  - Deployments in 3.0.x.x version
-- Copy the prediction Endpoint for the model
-- Create a browser tab and go to https://<dkube_url>/inference
-- Paste the Endpoint URL
-- Copy Auth token from Developer settings in Dkube page and Paste in inference page
-- Choose mnist
-- Upload 3.png from repo
-- Click predict
+## 6. Test inference
 
-## Automate using pipelines
-Run this [pipeline](https://github.com/oneconvergence/dkube-examples/blob/tensorflow/mnist/pipeline.ipynb) to automate training and serving using kubeflow pipelines.
--->
+- Create a browser tab and go to https://<dkube_url>/inference
+- Paste the Endpoint URL from `Deployments`
+- Copy Auth token from `Developer settings` in DKube page and paste in
+- Choose `mnist` for model type
+- Upload `3.png` from repo
+- Click `Predict`
