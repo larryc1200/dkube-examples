@@ -96,22 +96,22 @@ In order to perform the manual workflow, a new JupyterLab notebook needs to be c
 
 - Navigate to `IDEs` menu on the left
 - Select `+ JupyterLab`
-  - `Basic` tab
-    - **Name:** `<your-ide-name>`  **(Your choice of name)**
-    - **Code:** Select `<your-code-repo>`  **(From the Code Repo selection step)**
-    - **Framework:** `Tensorflow`
-    - **Framework Version:** `2.0.0`
-    - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
-    > **Note** The image should default to the correct selection, but you should check to ensure that it is the right one <br><br>
-  - `Repos` tab
-    `Inputs` > `Datasets`
-     - `clinical`
-       - **Mount Path:** `/opt/dkube/input/clinical`
-     - `images`
-       - **Mount Path:** `/opt/dkube/input/images`
-     - `rna`
-       - **Mount Path:** `/opt/dkube/input/rna` <br><br>
-  - Leave the other fields in their current selection and `Submit`
+- `Basic` tab
+  - **Name:** `<your-ide-name>`  **(Your choice of name)**
+  - **Code:** Select `<your-code-repo>`  **(From the Code Repo selection step)**
+  - **Framework:** `Tensorflow`
+  - **Framework Version:** `2.0.0`
+  - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
+  > **Note** The image should default to the correct selection, but you should check to ensure that it is the right one <br><br>
+- `Repos` tab
+  - `Inputs` > `Datasets`
+    - `clinical`
+      - **Mount Path:** `/opt/dkube/input/clinical`
+    - `images`
+      - **Mount Path:** `/opt/dkube/input/images`
+    - `rna`
+      - **Mount Path:** `/opt/dkube/input/rna` <br><br>
+- Leave the other fields in their current selection and `Submit`
 
 ### Experiment with Training using JupyterLab
 
@@ -133,27 +133,27 @@ The JupyterLab notebook allows you to see the steps in the workflow, and to expe
 A batch training run will create a model that can be used to analyze the metrics.  The training assumes that the datasets have been preprocessed by the initial pipeline.
 
 - Navigate to `Runs` menu on the left, select `+ Run` > `Training` and fill in the following fields:
-  - `Basic` tab
-    - **Name:** `<your-run-name>`  **(Your choice of name)**
-    - **Code:** Select `<your-code-repo>`  **(From the Code Repo selection step)**
-    - **Framework:** `Tensorflow`
-    - **Framework Version:** `2.0.0`
-    - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
-    > **Note** The image should default to the correct selection, but you should check to ensure that it is the right one
-    - **Startup Command:** `python workflow.py` <br><br>
-  - `Repos` tab
-    `Inputs` > `Datasets`
-     - `clinical`
-       - **Mount Path:** `/opt/dkube/input/clinical`
-     - `images`
-       - **Mount Path:** `/opt/dkube/input/images`
-     - `rna`
-       - **Mount Path:** `/opt/dkube/input/rna` <br><br>
-    - `Outputs` > `Models`
-      - `regression-model`
-        - **Mount Path:** `/opt/dkube/output`
-    > **Note** Ensure that you enter the Model information into the `Outputs` section and **not** the `Inputs` section
-  - Leave the other fields in their current selection and `Submit` <br><br>
+- `Basic` tab
+  - **Name:** `<your-run-name>`  **(Your choice of name)**
+  - **Code:** Select `<your-code-repo>`  **(From the Code Repo selection step)**
+  - **Framework:** `Tensorflow`
+  - **Framework Version:** `2.0.0`
+  - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
+  > **Note** The image should default to the correct selection, but you should check to ensure that it is the right one
+  - **Startup Command:** `python workflow.py` <br><br>
+- `Repos` tab
+  - `Inputs` > `Datasets`
+    - `clinical`
+      - **Mount Path:** `/opt/dkube/input/clinical`
+    - `images`
+      - **Mount Path:** `/opt/dkube/input/images`
+    - `rna`
+      - **Mount Path:** `/opt/dkube/input/rna` <br><br>
+  - `Outputs` > `Models`
+    - `regression-model`
+      - **Mount Path:** `/opt/dkube/output`
+  > **Note** Ensure that you enter the Model information into the `Outputs` section and **not** the `Inputs` section
+- Leave the other fields in their current selection and `Submit` <br><br>
 - This will start a Training Run, which will create a Model when it is complete
 
 ### Compare the Model Metrics
