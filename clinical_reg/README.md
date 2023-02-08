@@ -10,19 +10,19 @@
 
  This example provides a fully automated way to train and deploy the model, and a manual approach that highlights the DKube UI.
 
-## Create Code Repo
+## 1. Create Code Repo
 
  The Code Repo contains the program code and other associated files for developing and running your model training.
 
  - Navigate to `Code` menu on the left side of the screen
  - Select `+ Code`
-   - **Name:** `<your-code-repo>`  **(Your choice of name)**
+   - **Name:** `monitoring-example`  **(Or choose your own name <your-code-repo>`)**
    - **Code Source:** `Git`
    - **URL:** `https://github.com/oneconvergence/dkube-examples.git`
    - **Branch:** `tensorflow`
    - Leave the other fields in their current selection and `Submit`
 
-## 1. Automated Setup and Execution using Kubeflow Pipelines
+## 2. Automated Setup and Execution using Kubeflow Pipelines
 
  The clinical regression can be run in an automated manner through a Kubeflow Pipeline. This section explains how to execute this.
 
