@@ -1,26 +1,26 @@
 # Clinical Regression Example
  
- This example takes clinical data, RNA data, and images as inputs and uses regression to train a model that will predict how long the person is expected to take to recover.  The training flow is:
+This example takes clinical data, RNA data, and images as inputs and uses regression to train a model that will predict how long the person is expected to take to recover.  The training flow is:
 
- - Preprocess the clinical data and images
- - Split the training data into training, validation, and test datasets
- - Train the model
- - Deploy the model
- - Test the model with a WebApp
+- Preprocess the clinical data and images
+- Split the training data into training, validation, and test datasets
+- Train the model
+- Deploy the model
+- Test the model with a WebApp
 
  This example provides a fully automated way to train and deploy the model, and a manual approach that highlights the DKube UI.
 
 ## 1. Create Code Repo
 
- The Code Repo contains the program code and other associated files for developing and running your model training.
+The Code Repo contains the program code and other associated files for developing and running your model training.
 
- - Navigate to `Code` menu on the left side of the screen
- - Select `+ Code`
-   - **Name:** `monitoring-example`  **(Or choose your own name <your-code-repo>`)**
-   - **Code Source:** `Git`
-   - **URL:** `https://github.com/oneconvergence/dkube-examples.git`
-   - **Branch:** `tensorflow`
-   - Leave the other fields in their current selection and `Submit`
+- Navigate to `Code` menu on the left side of the screen
+- Select `+ Code`
+  - **Name:** `monitoring-example`  **(Or choose your own name `<your-code-repo>`)**
+  - **Code Source:** `Git`
+  - **URL:** `https://github.com/oneconvergence/dkube-examples.git`
+  - **Branch:** `tensorflow`
+  - Leave the other fields in their current selection and `Submit`
 
 ## 2. Automated Setup and Execution using Kubeflow Pipelines
 
@@ -33,7 +33,7 @@
  - Navigate to `IDEs` menu on the left
  - Select `+ JupyterLab`
    - **Name:** `<your-ide-name>`  **(Your choice of name)**
-   - **Code:** Select *\<your-code-repo\>*  **(From the Code Repo selection step)**
+   - **Code:** Select `<your-code-repo>`  **(From the Code Repo selection step)**
    - **Framework:** `Tensorflow`
    - **Framework Version:** `2.0.0`
    - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
@@ -66,111 +66,127 @@
 
 ### View Resources Created by Pipeline
 
- After the pipeline has completed its execution, you can view the Runs, Datasets, and Models created.
+ After the pipeline has completed its execution, you can view the Runs, Datasets, and Models created.  You can go to the `Test Inference` section to use example files with the deployed model.
 
-<!---
-### Upload Pipeline to DKube
+## 3. Test Inference
 
- Before execution, the pipeline needs to be uploaded to DKube.
+ One Convergence has created a simple test inference application for this example.
 
- - Navigate to `Pipelines` menu
- - Select `+ Upload Pipeline`
- - **Pipeline Description:** Your choice of description
- - Select `Upload a File`
- - Choose the file that you downloaded in the previous step
- - Select `Create`
+ - From the JupyterLab tab, download the csv data file `cli_inp.csv` from the `./sample_data` folder, and any sample image from the `./sample_data/images` folder
+ - Navigate to the `Deployments` menu on the left and identify the deployment from the pipeline (it should be at the top)
+   - Copy the `Endpoint` URL from that row to your clipboard using the icon
+ - In a new tab, access the WebApp at `https://<your-dkube-url>/inference`  (Eg. `https://1.2.3.4:32222/inference`)
+ - In the WebApp, fill in the following fields:
+   - Paste the `Endpoint` URL into the `Model Serving URL` field
+   - Copy the token from the DKube `Developer Settings` menu at the top right
+   - Select the model type as `Regression`
+   - Select `Upload Image` and use the image file that you downloaded
+   - Select `Upload File` and use the csv file that you downloaded
+   - `Predict` <br><br>
+ - The WebApp will predict how long the person will take to recover
+ > **Note** You may receive a message that the WebApp has timed out.  This is due to the pod starting up.  Select `Wait`.
 
-### Create Experiment (Optional)
+## 4. Manual Development with Example
 
- A Kubeflow Pipeline must run within an Experiment.  If you already have an Experiment for the pipeline runs, skip this step and go to the next section on creating a pipeline run.  If you do not have an Experiment, this section explains how to create one.
+Once the pipeline has created the resources, you an use DKube to perform the steps manually in order to understand the flow.
 
- - Return to main `Pipelines` menu
- - Select `Experiments` tab
- - Select `+ Create Experiment`
-   - **Experiment Name:** Your choice of name
-   - Select `Next` <br><br>
- - Go back to the main `Pipelines` menu
+### Create a JupyterLab Notebook with Datasets Mounted
 
-### Create and Execute Pipeline Run
+In order to perform the manual workflow, a new JupyterLab notebook needs to be created and launched with the datasets and mount points added.
 
- - Navigate to the main `Pipelines` menu
- - Select the pipeline that you just uploaded
- - Select `+ Create run`
-   - The top names will be prepopulates
-   - Choose your Experiment from the dropdown
-   - **user:** `Your username`
-   - **auth_token:** Authentication token from the `Developer Settings` menu at the top right of the screen
-   - `Start` the pipeline
--->
+- Navigate to `IDEs` menu on the left
+- Select `+ JupyterLab`
+  - `Basic` tab
+    - **Name:** `<your-ide-name>`  **(Your choice of name)**
+    - **Code:** Select `<your-code-repo>`  **(From the Code Repo selection step)**
+    - **Framework:** `Tensorflow`
+    - **Framework Version:** `2.0.0`
+    - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
+    > **Note** The image should default to the correct selection, but you should check to ensure that it is the right one <br><br>
+  - `Repos` tab
+    `Inputs` > `Datasets`
+     - `clinical`
+       - **Mount Path:** `/opt/dkube/input/clinical`
+     - `images`
+       - **Mount Path:** `/opt/dkube/input/images`
+     - `rna`
+       - **Mount Path:** `/opt/dkube/input/rna` <br><br>
+  - Leave the other fields in their current selection and `Submit`
 
-<!---
-### Download pipeline to Jupyterlab
+### Experiment with Training using JupyterLab
 
-1. Start any of the jupyterlab notebook from the IDE tab.
-2. Once running, click the jupyterlab icon to launch jupyterlab
-3. Open terminal in Jupyterlab and run
-   ```
-   > wget https://raw.githubusercontent.com/oneconvergence/dkube-examples/tensorflow/clinical_reg/pipeline_withslurm.ipynb
-   ```
-4. Open pipeline.ipynb and run cells to generate the tar file and create run.
-5. Download the tar file by right-clicking on it(optional).
-6. Upload the tar file into the DKube pipeline UI(optional).
+The JupyterLab notebook allows you to see the steps in the workflow, and to experiment with different parameters.
 
-# Deploy model.(Optional)
--  Go to Model Catalog and from model version click deploy model.
--  Give name. 
--  Serving image: default 
--  Deployment type: Test
--  Select transformer
-   -  Transformer script: `clinical_reg/transformer.py`
--  Deploy using: CPU and Submit. 
--  Deployed Model will be available in Model Serving.
--->
+- When the JupyterLab notebook instance is running, open a new tab by selecting the icon on the right of the row
+- Navigate to <code>workspace/**\<your-code-repo\>**/clinical_reg</code>
+- Open `workflow.ipynb`
+  - `Run All Cells` <br><br>
+- The notebook file goes through the experiment steps
+  - Preprocess & visualize the data
+  - Split the data into train, validation, & test datasets
+  - Train on the data
+  - Save the model
+  - Compare the models
 
-## Test Inference.
+### Train Model with Batch Run
 
-1. Download the csv data file [cli_inp.csv](sample_data/cli_inp.csv) and any sample image from images folder from [sample_data/images](sample_data/images)
-2. open https://{your-dkube-url}/inference,
-   - Eg: https://1.2.3.4:32222/#/dsinference
-3. In DKube UI, once the pipeline run has completed, navigate to ‘Deployments’ on the left pane
-4. Copy the ‘Endpoint’ URL in the row using the clipboard icon
-5. Enter the Endpoint URL into the Model Serving URL field of inference page,
-6. Copy the token from ‘Developer Settings’ and paste into ‘Authorization Token’ box
-7. Select Model Type as ‘Regression’ on the next dropdown selection
-8. Click ‘Upload Image’ to load image from [1], ‘Upload File’ to load csv from [1]
-9.  Click ‘Predict’ to run Inference.
+A batch training run will create a model that can be used to analyze the metrics.  The training assumes that the datasets have been preprocessed by the initial pipeline.
 
-## 2. Regression Notebook Workflow(Repos will be created by the pipeline above).
+- Navigate to `Runs` menu on the left, select `+ Run` > `Training` and fill in the following fields:
+  - `Basic` tab
+    - **Name:** `<your-run-name>`  **(Your choice of name)**
+    - **Code:** Select `<your-code-repo>`  **(From the Code Repo selection step)**
+    - **Framework:** `Tensorflow`
+    - **Framework Version:** `2.0.0`
+    - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
+    > **Note** The image should default to the correct selection, but you should check to ensure that it is the right one
+    - **Startup Command:** `python workflow.py` <br><br>
+  - `Repos` tab
+    `Inputs` > `Datasets`
+     - `clinical`
+       - **Mount Path:** `/opt/dkube/input/clinical`
+     - `images`
+       - **Mount Path:** `/opt/dkube/input/images`
+     - `rna`
+       - **Mount Path:** `/opt/dkube/input/rna` <br><br>
+    - `Outputs` > `Models`
+      - `regression-model`
+        - **Mount Path:** `/opt/dkube/output`
+    > **Note** Ensure that you enter the Model information into the `Outputs` section and **not** the `Inputs` section
+  - Leave the other fields in their current selection and `Submit` <br><br>
+- This will start a Training Run, which will create a Model when it is complete
 
-1. Go to IDE section
-2. Create Notebook 
-   - Give a name 
-   - Code: regression
-   - Framework : Tensorflow
-   - Framework version : 2.3
-   - Datasets: 
-         - i.   clinical Mount point: /opt/dkube/input/clinical 
-         - ii.  images Mount point: /opt/dkube/input/images 
-         - iii. rna Mount Point: /opt/dkube/input/rna
-i3. Submit
-4. Open workflow.ipynb from location `workspace/regression/clinical_reg` 
-   - Run cells and wait for output (In case of running the notebook second time, restart the kernel)
-5. Delete if workflow.py is already there and export the workflow notebook as executable. 
-   - Upload it into Juyterlab. 
-   - Make changes in py file, comment/remove the following line numbers: 
-        -i. 239-240
-        -ii. 268 
-        -iii. 435-end 
-  -  Save and commit the workflow.py
-6. Create a model named workflow with source none.
-7. Create training run using workflow.py 
-   - Give a name 
-   - Code: regression 
-   - Framework : Tensorflow
-   - Framework version : 2.0.0
-   - Startup command: python workflow.py 
-   - Datasets: 
-        - i.   clinical Mount point: /opt/dkube/input/clinical 
-        - ii.  images Mount point: /opt/dkube/input/images 
-        - iii. rna Mount Point: /opt/dkube/input/rna 
-   - Output model: workflow, Mount point : /opt/dkube/output
+### Compare the Model Metrics
+
+Each training run will create a model.  The metrics from the model can be compared to determine the best model for deployment.  With the original pipeline run and the manual run, there will be models that can be compared.
+
+- Navigate to the `Models` menu on the left
+- Open `regression-model` with the `>` to the left
+- Choose the most recent 2 versions
+- Select `Compare` button at the top
+  - View the metrics in a tabular form at the top of the screen
+  - Scroll down to the graph and in the `Y-Axis` screen select `train_loss`
+  - The graph will show the difference between the models in graphical form <br><br>
+- Navigate back to the model list with the back arrow `<--` at the top
+- Select the `regression-model` name (**not** the caret)
+- Select the newest version
+- Select the `lineage` tab at the top of the next screen
+  - View the inputs and output that created this model
+  - This can be used to improve the model if required
+
+### Deploy the Model
+
+Once the model with the best metrics has been identified, it can be deployed for live inference serving.
+
+- Navigate to the top of the `Models` menu
+- Select the `regression-model` name
+- Select the `Deploy` icon on the far right of the newest version, and fill in the following fields:
+  - **Name:** `<your-deploy-name>`   **(Choose a name)**
+  - **Deployment:** `Test`
+  - **Deploy Using:** `CPU`
+  - Select `Transformer` checkbox
+  - **Transformer Script:** `clinical_reg/transformer.py`
+- Leave the other fields in their current selection and `Submit` <br><br>
+- Navigate to the `Deployments` menu
+- Your new model will be deployed on this screen
+- You can test the deployment with the WebApp as described above
