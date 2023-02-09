@@ -8,7 +8,7 @@ This example takes clinical data, RNA data, and images as inputs and uses regres
 - Deploy the model
 - Test the model with a WebApp
 
- This example provides a fully automated way to train and deploy the model, and a manual approach that highlights the DKube UI.
+ This example provides a fully automated way to train and deploy the model.
 
 ## 1. Create Code Repo
 
@@ -16,7 +16,7 @@ The Code Repo contains the program code and other associated files for developin
 
 - Navigate to `Code` menu on the left side of the screen
 - Select `+ Code`
-  - **Name:** `monitoring-example`  **(Or choose your own name `<your-code-repo>`)**
+  - **Name:** `monitoring-example`  **(Or choose your own name as `<your-code-repo>`)**
   - **Code Source:** `Git`
   - **URL:** `https://github.com/oneconvergence/dkube-examples.git`
   - **Branch:** `tensorflow`
@@ -85,6 +85,10 @@ The Code Repo contains the program code and other associated files for developin
    - `Predict` <br><br>
  - The WebApp will predict how long the person will take to recover
  > **Note** You may receive a message that the WebApp has timed out.  This is due to the pod starting up.  Select `Wait`.
+
+<!---
+
+This section will not be used, but is kept here in case it is needed later.
 
 ## 4. Manual Development with Example
 
@@ -190,3 +194,5 @@ Once the model with the best metrics has been identified, it can be deployed for
 - Navigate to the `Deployments` menu
 - Your new model will be deployed on this screen
 - You can test the deployment with the WebApp as described above
+
+--->
