@@ -16,7 +16,7 @@ The Code Repo contains the program code and other associated files for developin
 
 - Navigate to `Code` menu on the left side of the screen
 - Select `+ Code`
-  - **Name:** `regression`  **(Or choose your own name as `<your-code-repo>`)**
+  - **Name:** `regression`
   - **Code Source:** `Git`
   - **URL:** `https://github.com/oneconvergence/dkube-examples.git`
   - **Branch:** `tensorflow`
@@ -33,7 +33,7 @@ The Code Repo contains the program code and other associated files for developin
  - Navigate to `IDEs` menu on the left
  - Select `+ JupyterLab`
    - **Name:** `<your-ide-name>`  **(Your choice of name)**
-   - **Code:** Select `<your-code-repo>`  **(From the Code Repo selection step)**
+   - **Code:** Select `regression`
    - **Framework:** `Tensorflow`
    - **Framework Version:** `2.0.0`
    - **Image:** `ocdr/dkube-datascience-tf-cpu-multiuser:v2.0.0-17`
@@ -46,13 +46,9 @@ The Code Repo contains the program code and other associated files for developin
 
  - Navigate to `IDEs` menu on the left
  - When the JupyterLab instance is running, select the icon on the right to open a new JL tab
- - Navigate to <code>workspace/**\<your-code-repo\>**/clinical_reg</code>
+ - Navigate to <code>workspace/regression/clinical_reg</code>
  - Open `pipeline.ipynb`
- - If you used the default Code repo in the previous step
-   - Select `Run` menu at the top and Select `Run All Cells` <br><br>
- - If you used your own Code repo name
-   - Change the variable name in the xxx cell to `training_program = <your-code-repo>`
-   - Select `Run` menu at the top and Select `Run All Cells` <br><br>
+ - Select `Run` menu at the top and Select `Run All Cells` <br><br>
  - This will create the Kubeflow Pipeline to:
    - Create the datasets
    - Proprocess the data
