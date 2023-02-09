@@ -56,7 +56,7 @@
      - You can view the difference in output at the bottom of the script
      > **Note** You would normally be developing your code in JupyterLab, and once you were satisfied you would create a Python file from the `ipynb` file.  In this example, a Python file is already ready for execution.
 
-## 3. Work with Traiing Runs
+## 3. Work with Training Runs
 
  Batch training runs can be used to create trained models.
 
@@ -149,8 +149,8 @@
 
  - Open the JupyterLab window
  - Navigate to <code>workspace/**\<your-code-repo\>**/mnist</code>
- - Open `pipeline.ipynb` >br><br>
- - If you chose the default value (`mnist`) then `Run all Cells`<br><br>
+ - Open `pipeline.ipynb` <br><br>
+ - If you chose the default value for all of your repos (`mnist`) then `Run all Cells`<br><br>
  - If you chose different repo names
    - In the 2nd cell, labeled `User Variables`, modify the repo names with your chosen names
    - `Run All Cells` from the menu at the top <br><br>

@@ -21,8 +21,8 @@ try:
     res = api.get_code(user, 'regression')
     print("Code repo already exists")
 except:
-    code = DkubeCode(user, name='regression', tags=tags)
-    code.update_git_details('https://github.com/oneconvergence/dkube-examples/tree/tensorflow/clinical_reg')
+    code = DkubeCode(user, name='regression', branch='tensorflow', tags=tags)
+    code.update_git_details('https://github.com/oneconvergence/dkube-examples.git')
     api.create_code(code)
 
 try:
