@@ -32,15 +32,17 @@ This workflow uses JupyterLab notebook scripts to set up the resources & create 
 
 The only manually created resource requirement for this example is the Code repo.  The rest of the resources are optionally created by notebook scripts.
 
+> **Note** Optional manual steps are provided for a more complete workflow experience
+
 - Select `Code` menu on the left, then `+ Code`, and fill in the following fields:
   - **Name:** `chest-xray`  **(Or choose your own name as `<your-code-repo>`)**
   - **Source:** `Git`
   - **URL:** `https://github.com/oneconvergence/dkube-examples.git`
   - **Branch:** `monitoring`
 - Leave the rest of the fields at their current value
-- `Add Code` <br><br>
-- If you want to have the example automatically perform the training and model deployment, go directly to section [Create and Launch JupyterLab](#3-create-and-launch-jupyterlab)
-- If you want to understand the normal setup flow, go to the next section on setting up the rest of the repos
+- `Add Code`
+  > **Note** If you want to have the example automatically perform the training and model deployment, go directly to section [Create and Launch JupyterLab](#3-create-and-launch-jupyterlab)
+  > **Note** If you want to understand the complete setup flow, go to the next section on setting up the rest of the repos
 
 ## 2. Create Code and Model Repos
 
@@ -51,11 +53,11 @@ The only manually created resource requirement for this example is the Code repo
 - Leave the rest of the fields at their current value
 - `Add Dataset` <br><br>
 - Select `Models` menu on the left, then `+ Model`
-  - **Name:** `chest-xray`
+  - **Name:** `<your-user-name>-chest-xray`
 - Leave the rest of the fields at their current value
 - `Add Model`
 
-## 2. Create and Launch JupyterLab
+## 3. Create and Launch JupyterLab
 
 In order to run the script to set up the resources, train and deploy the model, and create the monitor, a JupyterLab IDE needs to be created.  The scripts will be run from within JupyterLab.
 
@@ -68,9 +70,11 @@ In order to run the script to set up the resources, train and deploy the model, 
 - Leave the rest of the fields at their current value
 - `Submit`
 
-## 3. Create the Resources
+## 4. Create the Resources
 
-This script creates the datasets and models required for training and monitoring.
+This script creates the datasets and models required for training and monitoring. 
+
+> **Note** This script will identify which resources have already been created, and create the ones that are necessary to continue
 
 - Once the IDE is running, launch JupyterLab from the icon on the far right
 - Navigate to <code>workspace/**\<your-code-repo\>**/image_cloudevents</code>
@@ -110,10 +114,10 @@ This script creates the datasets and models required for training and monitoring
 
 - The following resources will be created:
   - `chest-xray` Dataset on both the serving and monitoring cluster
-  - `<your user name>-image-mm-kf` Model on the serving cluster
-  - `<your user name>-image-mm-kf-s3` Dataset on the monitoring cluster
+  - `<your user name>-chest-xray` Model on the serving cluster
+  - `<your user name>-chest-xray-s3` Dataset on the monitoring cluster
 
-## 4. Train and Deploy the Model on Serving Cluster
+## 5. Train and Deploy the Model on Serving Cluster
 
 This script trains and deploys a model on the serving cluster.  A Kubeflow Pipeline executes this step.
 
@@ -123,27 +127,15 @@ This script trains and deploys a model on the serving cluster.  A Kubeflow Pipel
   - Preprocess the dataset and generate the training data or retraining data
   - Train with the generated dataset as an input, and create an output model
   - Deploy the generated model on a predict endpoint
-- The pipeline will create a new version of the Model `image-mm-kf`
+- The pipeline will create a new version of the Model `<your user name>-chest-xray`
 > **Note** Wait for the pipeline to complete before continuing
-
-## 5. Optional 2nd Model for Metric Comparison
-
-If you want to train a 2nd model in order to compare the metrics, follow the steps in this section.  Otherwise, skip to either [Execute a Katib Run](#6-execute-a-katib-run) or [Create a Model Monitor](#7-create-a-model-monitor).
-
-- Select the `Runs` menu on the left
-- Find the most recent Run of the form `xray-pipeline-xxxxxx`
-- Select the Run checkbox and `Clone` on the top screen menu
-  - Choose a name for your Run
-  - Navigate to the `Configuration` tab
-  - Select the `+` next to `Environmental variables`
-  - Fill in the Key field with `EPOCHS` and the Value field with `20`  (**Note:** The Key field must be in upper case)
-- Submit the Run
+> **Note** If you want to train a 2nd model in order to use Katib-based hyperparameter optimization, compare the metrics, and manually deploy a model, follow the steps in the next sections.  Otherwise, skip to [Create a Model Monitor](#9-create-a-model-monitor).
 
 ## 6. Execute a Kabib Run
 
-If you want to execute a Katib run for hyperparameter tuning, follow the steps in this section.  Otherwise, skip to [Create a Model Monitor](#7-create-a-model-monitor).
+This section trains a 2nd model using using Katib-based hyperparameter optimization, and the metrics from the 2 models are then compared.
 
-- Download the hyperparameter tuning file from [Katib Tuning File](https://github.com/oneconvergence/dkube-examples/tree/monitoring/image_cloudevents/xray-tuning.yaml)
+- Download the hyperparameter optimization file from [Katib Tuning File](https://github.com/oneconvergence/dkube-examples/tree/monitoring/image_cloudevents/xray-tuning.yaml)
   - Select `Raw`
   - Right-click on the file and use `Save as...` <br><br>
 - Select the `Runs` menu on the left
@@ -155,13 +147,43 @@ If you want to execute a Katib run for hyperparameter tuning, follow the steps i
     > **note** This step is important, since the Katib run will not work properly with variables active
   - Select the `Upload` button on the `Upload Tuning Definition` section
   - Choose the Katib file that you downloaded
-- Submit <br><br>
+- `Submit` <br><br>
 - When the Run is complete, a single Model will be created with the best trial
 - You can view the results by selecting the Katib icon on the far right of the Run
 
-## 7. Create a Model Monitor
+## 7. Compare Model Metrics
+
+This section use the Model versions from the Training Runs to compare metrics.
+
+- Select the `Models` menu on the left
+- Select the Model `<your-user-name>-chest-xray`
+- Select the checkboxes for the v2 & v3 of the Model  (The first version is a placeholder)
+  - Scroll to the `Y-axis` field to the left of the graph
+  - Select `train_accuracy`
+  - The graph will show the training accuracy of each Run
+
+## 8. Deploy the 2nd Model
+
+This section deploys the 2nd model for production serving.
+
+- Select the `Models` menu on the left
+- Select the Model `<your-user-name>-chest-xray`
+- Select the `Deploy` icon at the far right of the v3 of the model
+- Fill in the fields in the `Deploy` popup as follows
+  - **Name:** `Choose a name`
+  - **Deployment:** `Production`
+  - **Deploy Using:** `CPU`
+  - Check the `Transformer` box
+  - **Transformer Script:** `image_cloudevents/transformer.py`
+- `Submit` <br><br>
+- Select the `Deployments` menu on the left
+- Your new deployment will show up in the list
+
+## 9. Create a Model Monitor
 
 In order to monitor the deployed model, a monitor is created and launched.  This workflow executes this programatically through the DKube SDK. This can also be done through the UI by following a different example flow in this repo.
+
+> **Note** The Monitor will use the Deployment that was created from the `train-and-deploy` script
 
 - Open `modelmonitor.ipynb`
  
@@ -173,7 +195,7 @@ In order to monitor the deployed model, a monitor is created and launched.  This
   - Create a new model monitor
 - After the script has completed, the monitor `image-mm-kf` will be in the active state
 
-## 8. Generate Data
+## 10. Generate Data
 
 Predict and Groundtruth datasets will be generated by this script, and will be used by the monitor to analyse the model execution.
 
@@ -184,7 +206,7 @@ Predict and Groundtruth datasets will be generated by this script, and will be u
 
 > **Note** Live data will be created on the MinIO server under the deployment ID.
 
-## 9. Clean Up the Data when Complete
+## 11. Clean Up the Data when Complete
 
 After you are done with the example, clean up the data by running the `Cleanup` cells in the `modelmonitor` and `resources` scripts
 
