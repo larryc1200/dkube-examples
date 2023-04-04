@@ -4,7 +4,6 @@ This example trains a model to identify pneumonia from chest x-rays.  The model 
 
 This workflow uses JupyterLab notebook scripts to set up the resources & create the model monitor, and a Kubeflow pipeline to train & deploy the model.  A separate readme file is available in this folder to create the monitor through the UI, in the same folder called [README-ui.md](README-ui.md)
 
-- This example only supports predict dataset sources as **CloudEvents**. 
 - This example  supports model deployment with a full DKube cluster (`serving cluster`) and model monitoring on either the same cluster or a seperate minimal DKube cluster (`monitoring cluster`).
   - **Serving cluster:** Where the production deployment will be running
   - **Monitoring cluster:** Where the model monitor will be running
@@ -41,8 +40,10 @@ The only manually created resource requirement for this example is the Code repo
   - **Branch:** `monitoring`
 - Leave the rest of the fields at their current value
 - `Add Code`
-  > **Note** If you want to have the example automatically perform the training and model deployment, go directly to section [Create and Launch JupyterLab](#3-create-and-launch-jupyterlab)
-  > **Note** If you want to understand the complete setup flow, go to the next section on setting up the rest of the repos
+
+> **Note** If you want to have the example automatically perform the training and model deployment, go directly to section [Create and Launch JupyterLab](#3-create-and-launch-jupyterlab)
+
+> **Note** If you want to understand the complete setup flow, go to the next section on setting up the rest of the repos
 
 ## 2. Create Code and Model Repos
 
@@ -81,7 +82,7 @@ This script creates the datasets and models required for training and monitoring
 - Open `resources.ipynb`
 > **Warning** Ensure that `Cleanup = False` in the last cell, since it may have been changed in a previous execution
 
-- If you called your code repo something other than `chest-xray`, edit the following variable in the 3rd cell labeled `User-Defined Variables`:
+> **Note** If you called your code repo something other than `chest-xray`, edit the following variable in the 3rd cell labeled `User-Defined Variables`:
   - `DKUBE_TRAINING_CODE_NAME` = *`<your-code-repo>`*
  
 ### Serving and Monitoring on Same Cluster
@@ -120,6 +121,8 @@ This script creates the datasets and models required for training and monitoring
 ## 5. Train and Deploy the Model on Serving Cluster
 
 This script trains and deploys a model on the serving cluster.  A Kubeflow Pipeline executes this step.
+
+> **Note** This model will be used for the model monitor steps later in the example
 
 - Open `train-and-deploy.ipynb`
 - `Run All Cells`
@@ -193,7 +196,7 @@ In order to monitor the deployed model, a monitor is created and launched.  This
 - This script will:
   - Add the right links and import the deployment if the monitoring is on a different cluster from the serving cluster
   - Create a new model monitor
-- After the script has completed, the monitor `image-mm-kf` will be in the active state
+- After the script has completed, the monitor `<your-user-name>-chest-xray` will be in the active state
 
 ## 10. Generate Data
 
