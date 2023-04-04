@@ -2,7 +2,7 @@
 
 This example trains a model to identify pneumonia from chest x-rays.  The model is then deployed and used as the basis for monitoring with synthetic live data to demonstrate the DKube monitoring capability.
 
-This workflow uses a Kubeflow Pipeline to set up the resources and created the monitor.  A separate readme file is available in this folder to create the monitor through the UI, in the same folder called [README-ui.md](README-ui.md)
+This workflow uses JupyterLab notebook scripts to set up the resources & create the model monitor, and a Kubeflow pipeline to train & deploy the model.  A separate readme file is available in this folder to create the monitor through the UI, in the same folder called [README-ui.md](README-ui.md)
 
 - This example only supports predict dataset sources as **CloudEvents**. 
 - This example  supports model deployment with a full DKube cluster (`serving cluster`) and model monitoring on either the same cluster or a seperate minimal DKube cluster (`monitoring cluster`).
@@ -16,10 +16,12 @@ This workflow uses a Kubeflow Pipeline to set up the resources and created the m
   - This includes the Code, Dataset and Model repos
 - Train a model for the example using Tensorflow
 - Deploy the model for serving
+- Optionally create a Katib-based hyperparameter run
+  - Compare the metrics on the models
 - Create a monitor
-- For seperate serving and monitoring clusters
-  - Add a serving cluster link on the monitoring cluster
-  - Import the deployment onto the monitoring cluster
+  - For seperate serving and monitoring clusters
+    - Add a serving cluster link on the monitoring cluster
+    - Import the deployment onto the monitoring cluster
 - Generate data for analysis by the monitor
   - Predict data: Inference inputs/outputs
   - Label data:  Dataset with Groundtruth values for the inferences generated above
@@ -28,7 +30,7 @@ This workflow uses a Kubeflow Pipeline to set up the resources and created the m
 
 ## 1. Create DKube Code Repo
 
-The only manually created resource requirement for this example is the Code repo.  The rest of the resources are created by the notebook script.
+The only manually created resource requirement for this example is the Code repo.  The rest of the resources are optionally created by notebook scripts.
 
 - Select `Code` menu on the left, then `+ Code`, and fill in the following fields:
   - **Name:** `chest-xray`  **(Or choose your own name as `<your-code-repo>`)**
@@ -36,7 +38,22 @@ The only manually created resource requirement for this example is the Code repo
   - **URL:** `https://github.com/oneconvergence/dkube-examples.git`
   - **Branch:** `monitoring`
 - Leave the rest of the fields at their current value
-- `Add Code`
+- `Add Code` <br><br>
+- If you want to have the example automatically perform the training and model deployment, go directly to section [Create and Launch JupyterLab](#3-create-and-launch-jupyterlab)
+- If you want to understand the normal setup flow, go to the next section on setting up the rest of the repos
+
+## 2. Create Code and Model Repos
+
+- Select `Datasets` menu on the left, then `+ Dataset`
+  - **Name:** `chest-xray`
+  - **Source:** `Git`
+  - **URL:** `https://github.com/oneconvergence/dkube-examples/tree/monitoring/image_cloudevents/data/chest-xray-mini`
+- Leave the rest of the fields at their current value
+- `Add Dataset` <br><br>
+- Select `Models` menu on the left, then `+ Model`
+  - **Name:** `chest-xray`
+- Leave the rest of the fields at their current value
+- `Add Model`
 
 ## 2. Create and Launch JupyterLab
 
@@ -52,6 +69,8 @@ In order to run the script to set up the resources, train and deploy the model, 
 - `Submit`
 
 ## 3. Create the Resources
+
+This script creates the datasets and models required for training and monitoring.
 
 - Once the IDE is running, launch JupyterLab from the icon on the far right
 - Navigate to <code>workspace/**\<your-code-repo\>**/image_cloudevents</code>
@@ -96,9 +115,9 @@ In order to run the script to set up the resources, train and deploy the model, 
 
 ## 4. Train and Deploy the Model on Serving Cluster
 
-In order for the monitor example to operate, a model must be trained and deployed on the serving cluster.  A Kubeflow Pipeline executes this step.
+This script trains and deploys a model on the serving cluster.  A Kubeflow Pipeline executes this step.
 
-- Open `train.ipynb`
+- Open `train-and-deploy.ipynb`
 - `Run All Cells`
 - This creates and executes a pipeline in order to:
   - Preprocess the dataset and generate the training data or retraining data
@@ -107,7 +126,40 @@ In order for the monitor example to operate, a model must be trained and deploye
 - The pipeline will create a new version of the Model `image-mm-kf`
 > **Note** Wait for the pipeline to complete before continuing
 
-## 5. Create a Model Monitor
+## 5. Optional 2nd Model for Metric Comparison
+
+If you want to train a 2nd model in order to compare the metrics, follow the steps in this section.  Otherwise, skip to either [Execute a Katib Run](#6-execute-a-katib-run) or [Create a Model Monitor](#7-create-a-model-monitor).
+
+- Select the `Runs` menu on the left
+- Find the most recent Run of the form `xray-pipeline-xxxxxx`
+- Select the Run checkbox and `Clone` on the top screen menu
+  - Choose a name for your Run
+  - Navigate to the `Configuration` tab
+  - Select the `+` next to `Environmental variables`
+  - Fill in the Key field with `EPOCHS` and the Value field with `20`  (**Note:** The Key field must be in upper case)
+- Submit the Run
+
+## 6. Execute a Kabib Run
+
+If you want to execute a Katib run for hyperparameter tuning, follow the steps in this section.  Otherwise, skip to [Create a Model Monitor](#7-create-a-model-monitor).
+
+- Download the hyperparameter tuning file from [Katib Tuning File](https://github.com/oneconvergence/dkube-examples/tree/monitoring/image_cloudevents/xray-tuning.yaml)
+  - Select `Raw`
+  - Right-click on the file and use `Save as...` <br><br>
+- Select the `Runs` menu on the left
+- Find the most recent Run of the form `xray-pipeline-xxxxxx`
+- Select the Run checkbox and `Clone` on the top menu screen menu
+  - Choose a new name for your Run
+  - Navigate to the `Configuration` tab
+  - Delete any `Environmental variables` using the `X` on the right
+    > **note** This step is important, since the Katib run will not work properly with variables active
+  - Select the `Upload` button on the `Upload Tuning Definition` section
+  - Choose the Katib file that you downloaded
+- Submit <br><br>
+- When the Run is complete, a single Model will be created with the best trial
+- You can view the results by selecting the Katib icon on the far right of the Run
+
+## 7. Create a Model Monitor
 
 In order to monitor the deployed model, a monitor is created and launched.  This workflow executes this programatically through the DKube SDK. This can also be done through the UI by following a different example flow in this repo.
 
@@ -121,7 +173,7 @@ In order to monitor the deployed model, a monitor is created and launched.  This
   - Create a new model monitor
 - After the script has completed, the monitor `image-mm-kf` will be in the active state
 
-## 6. Generate Data
+## 8. Generate Data
 
 Predict and Groundtruth datasets will be generated by this script, and will be used by the monitor to analyse the model execution.
 
@@ -132,7 +184,7 @@ Predict and Groundtruth datasets will be generated by this script, and will be u
 
 > **Note** Live data will be created on the MinIO server under the deployment ID.
 
-## 7. Clean Up the Data when Complete
+## 9. Clean Up the Data when Complete
 
 After you are done with the example, clean up the data by running the `Cleanup` cells in the `modelmonitor` and `resources` scripts
 
